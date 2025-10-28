@@ -56,5 +56,5 @@ jobs:
         password: ${{ secrets.SERVER_PASS }}
         script: |
           mkdir -p /var/www/TestCI
-          cd /var/www/TestCI
+          cd /var/www/TestCI/publish/
           nohup dotnet TestCI.dll --urls "http://0.0.0.0:5000" > app.log 2>&1 &
