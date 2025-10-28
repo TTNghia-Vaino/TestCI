@@ -1,0 +1,45 @@
+name: .NET 8 CI Test Pipeline
+
+on:
+  push:
+    branches: [ "main" ]     # chạy khi push lên nhánh main
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1️⃣ Checkout code từ repo
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2️⃣ Setup .NET 8 SDK
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    # 3️⃣ Restore các package NuGet
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # 4️⃣ Build project
+    - name: Build project
+      run: dotnet build --configuration Release --no-restore
+
+    # 5️⃣ Run test (nếu có test project)
+    - name: Run tests
+      run: dotnet test --no-build --verbosity normal
+
+    # 6️⃣ Publish output
+    - name: Publish app
+      run: dotnet publish -c Release -o ./publish
+
+    # 7️⃣ Upload kết quả publish (để xem thử)
+    - name: Upload published artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dotnet-publish
+        path: ./publish
